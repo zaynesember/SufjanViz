@@ -14,6 +14,7 @@ library(tm)
 library(markdown)
 library(DT)
 
+# Colors sampled from album covers
 album_colors <- c("A Sun Came!"="#7b7644", "Michigan"="#d32831",
                   "Seven Swans"="#010508", "Illinois"="#4d758c",
                   "The Avalanche"="#e8681b", "The Age of Adz"="#ae3625",
@@ -21,6 +22,7 @@ album_colors <- c("A Sun Came!"="#7b7644", "Michigan"="#d32831",
                   "The Ascension"="#f8a139", "A Beginner's Mind"="#1769a1",
                   "Javelin"="#e688a3")
 
+# Albums ordered by release date
 album_levels <- c("A Sun Came!", "Michigan",
                   "Seven Swans", "Illinois",
                   "The Avalanche", "The Age of Adz",
@@ -28,6 +30,7 @@ album_levels <- c("A Sun Came!", "Michigan",
                   "The Ascension", "A Beginner's Mind",
                   "Javelin")
 
+# Accent colors sampled from album covers
 album_colors_accents <- c("A Sun Came!"="#c3a8a3", "Michigan"="#b9d3c6",
                           "Seven Swans"="#010508", "Illinois"="#fbe956",
                           "The Avalanche"="#7793a8", "The Age of Adz"="#1b1d1a",
@@ -35,6 +38,7 @@ album_colors_accents <- c("A Sun Came!"="#c3a8a3", "Michigan"="#b9d3c6",
                           "The Ascension"="#33323a", "A Beginner's Mind"="#f1d76e",
                           "Javelin"="#a78f6b")
 
+# Master dataset, renaming columns for prettiness
 df_trackviz <- readRDS("Data/df_trackviz.rds") %>%
   rename(`Album`=album_name,
          `Duration (s)`=duration_s,
@@ -49,7 +53,7 @@ df_trackviz <- readRDS("Data/df_trackviz.rds") %>%
   mutate(Album=factor(Album, levels=album_levels),
          `Mean word length in lyrics`=round(`Mean word length in lyrics`, 2))
 
-
+# Subset of data for scatterplot
 df_num <- df_trackviz %>% select(`Duration (s)`,
                                  `Track position in album (%)*`,
                                  `Loudness (dB)`,
@@ -60,6 +64,7 @@ df_num <- df_trackviz %>% select(`Duration (s)`,
                                  `Sentiment (AFINN)`,
                                  `Album release date`)
 
+# Subset of data for barplot
 df_bar <- df_trackviz %>% select(`Duration (s)`,
                                  `Track position in album (%)*`,
                                  `Loudness (dB)`,
@@ -71,6 +76,7 @@ df_bar <- df_trackviz %>% select(`Duration (s)`,
 
 all_albums <- df_trackviz %>% pull(Album) %>% unique()
 
+# Subset of data for wordcloud accompanying statistics
 df_trackviz_wordcloud <- df_trackviz %>% select(name, id, Album, text,
                                                 `Sentiment (AFINN)`,
                                                 `Loudness (dB)`,
@@ -80,10 +86,8 @@ df_trackviz_wordcloud <- df_trackviz %>% select(name, id, Album, text,
                                                 `Words per minute`,
                                                 `Duration (s)`)
 
-
+# Helper to build term matrix
 getTermMatrix <- memoise(function(song) {
-  # Careful not to let just any name slip in here; a
-  # malicious user could manipulate this value.
   if (!(song %in% unique(df_trackviz_wordcloud$name)))
     stop("Unknown song")
 
@@ -117,7 +121,6 @@ ui <- navbarPage("SufjanViz", fluid=T,
                                                       #xvar-label,
                                                       #yvar-label {font-size: 75%;}"))),
                             column(3,
-                                #h6("Plot options"),
                                 varSelectInput("xvar", "X variable", df_num, selected = "Duration (s)"),
                                 varSelectInput("yvar", "Y variable", df_num, selected = "Tempo (bpm)"),
                                 checkboxInput("exclude_instrumentals", "Exclude instrumental tracks", FALSE),
@@ -134,7 +137,7 @@ ui <- navbarPage("SufjanViz", fluid=T,
                                 conditionalPanel(condition="input.smooth==true",
                                                  selectInput("smooth_type", "Smoothing function",
                                                              list("Linear"="lm", "Loess"="loess"), selected = "Linear")),
-                                hr(), # Add a horizontal rule
+                                hr(), 
                                 checkboxGroupInput(
                                   "Album", "Filter by album",
                                   choices = unique(df_trackviz$Album),
@@ -164,9 +167,8 @@ ui <- navbarPage("SufjanViz", fluid=T,
                               div(DT::DTOutput("table_bar"), style="font-size:75%")
                             ),
                             sidebar=sidebar(
-                              #h6("Plot options"),
                               varSelectInput("barvar", "Variable", df_bar, selected = "Duration (s)"),
-                              hr(), # Add a horizontal rule
+                              hr(),
                               checkboxGroupInput(
                                 "Album_bar", "Filter by album",
                                 choices = unique(df_trackviz$Album),
@@ -211,10 +213,6 @@ ui <- navbarPage("SufjanViz", fluid=T,
 # Server
 
 server <- function(input, output, session) {
-
-  # observe({
-  #   lyrics <- (df_trackviz %>% filter(name==input$wc_song) %>% pull(lyrics))[[1]]
-  # })
 
 
   observe({
@@ -308,7 +306,6 @@ server <- function(input, output, session) {
       )
 
     if (input$show_margins) {
-      #type <- if(input$margin_type=="Density") "density" else "histogram"
       p <- ggExtra::ggMarginal(p, type = tolower(input$margin_type), margins = "both",
                                size = 8, groupColour = input$by_albums, groupFill = input$by_albums)
     }
@@ -333,9 +330,6 @@ server <- function(input, output, session) {
       return(NULL)  # Returning NULL to handle identical variables gracefully
     }
 
-    # formula <- !!input$yvar ~ !!input$xvar
-    # print(formula)
-
     # Try fitting the model; handle errors gracefully
     tryCatch({
       lm(subsetted()[[input$yvar]] ~ subsetted()[[input$xvar]], data = subsetted())
@@ -358,7 +352,6 @@ server <- function(input, output, session) {
 
     # Tidy the model output and select only the necessary columns
     tidy_fit <- broom::tidy(fit(), conf.int = TRUE) %>%
-      #filter(term != "Intercept") %>%  # Show only the row for input$xvar
       select(term, estimate, std.error, conf.low, conf.high, p.value) %>%
       mutate(estimate=round(estimate, 2),
              std.error=round(std.error, 2),
@@ -403,14 +396,11 @@ server <- function(input, output, session) {
     }
 
     p2 <- ggplot(subsetted_bar(), aes(x=track_number, y=!!input$barvar,
-                                      #color=factor(`Album`),
-                                      #group=factor(`Album`),
                                       fill=factor(`Album`))) +
       theme_bw() +
       list(
         geom_bar(stat="identity",position="dodge", width=.55),
         scale_x_discrete(expand = c(0,0)),
-        #scale_color_manual(values=album_colors),
         scale_fill_manual(values=album_colors),
 
         theme(
@@ -447,17 +437,6 @@ server <- function(input, output, session) {
                   options = list(dom = 't'))
   })
 
-  # output$table2 <- DT::renderDT({
-  #   DT::datatable(subsetted_table(),
-  #                 rownames=F,
-  #                 options = list(dom = 't'))
-  # })
-
-  # Word cloud elements
-  # terms <- reactive({
-  #   getTermMatrix("Chicago")
-  # })
-
   # Define a reactive expression for the document term matrix
   terms <- reactive({
     # Change when the "update" button is pressed...
@@ -466,25 +445,18 @@ server <- function(input, output, session) {
     isolate({
       withProgress({
         setProgress(message = "Processing corpus...")
-        # getTermMatrix((subsetted_wordcloud() %>%
-        #                  filter(name==input$wc_song) %>%
-        #                  pull(text))[[1]])
         getTermMatrix(input$wc_song)
       })
     })
   })
 
   # Make the wordcloud drawing predictable during a session
-  #wordcloud_rep <- repeatable(wordcloud)
 
   output$wordcloud <- renderWordcloud2({
     v <- data.frame(words=names(terms()), freq=terms()) %>%
             filter(ifelse(max(freq, na.rm=T) < input$freq, freq >= input$freq, freq>=0))
 
-    wordcloud2(v, #scale=c(4,0.5),
-                  #min.freq = input$freq, max.words=input$max,
-                  #colors=brewer.pal(8, "Dark2"))
-                  color=unname(album_colors))
+    wordcloud2(v, color=unname(album_colors))
     })
 
   output$table_wc <- DT::renderDT({
@@ -500,15 +472,5 @@ server <- function(input, output, session) {
   })
 
 }
-
-# TODO
-# input slider causing weird behavior
-# words too small in cloud
-# regression tool
-# position vs. loudness and tempo regression
-
-# About section notes
-# Non-lyric track data from Spotify API
-# Lyric data from Genius
 
 shinyApp(ui, server)
