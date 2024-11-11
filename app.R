@@ -74,6 +74,19 @@ df_bar <- df_trackviz %>% select(`Duration (s)`,
                                  `Mean word length in lyrics`,
                                  `Sentiment (AFINN)`)
 
+# Data with streaming variables
+df_streams <- df_trackviz %>% 
+  left_join(readRDS("Data/sufjan_streams.rds"), by=c("name"="trackName")) %>% 
+  mutate(across(c(n_streams:n_weekday_streams, total_msPlayed:total_sPlayed), 
+                ~replace_na(., 0))) %>% 
+  mutate(`Total min. played`=total_sPlayed/60) %>% 
+  mutate(`Mean % of track played`=100*mean_sPlayed/duration_min) %>% 
+  rename(
+    `Num. of streams`=n_streams
+  )
+
+df_streams_dropdown_y <- df_streams %>% select("Num. of streams", "Total min. played", "Mean % of track played")
+
 all_albums <- df_trackviz %>% pull(Album) %>% unique()
 
 # Subset of data for wordcloud accompanying statistics
@@ -111,7 +124,7 @@ getTermMatrix <- memoise(function(song) {
 # UI
 
 ui <- navbarPage("SufjanViz", fluid=T,
-                 tabPanel("Scatterplot",
+                 tabPanel("Tracks",
                           fluidRow(
                             tags$head(tags$style(HTML(".selectize-input,
                                                       .selectize-dropdown,
@@ -154,7 +167,7 @@ ui <- navbarPage("SufjanViz", fluid=T,
                                    div(DT::DTOutput("table"), style="font-size:75%")
                                    )
                           )),
-                 tabPanel("Barplot",
+                 tabPanel("Albums",
                           page_sidebar(
                             tags$head(tags$style(HTML(".selectize-input,
                                                       .selectize-dropdown,
@@ -177,7 +190,7 @@ ui <- navbarPage("SufjanViz", fluid=T,
                             )
                           )
                         ),
-                 tabPanel("Word Cloud",
+                 tabPanel("Lyrics",
                           tags$head(tags$style(HTML(".selectize-input,
                                                       .selectize-dropdown,
                                                       .checkbox,
@@ -204,6 +217,49 @@ ui <- navbarPage("SufjanViz", fluid=T,
                             )
                           )
                         ),
+                 tabPanel("Streaming",
+                          fluidRow(
+                            tags$head(tags$style(HTML(".selectize-input,
+                                                      .selectize-dropdown,
+                                                      .checkbox,
+                                                      #smooth_type-label,
+                                                      #margin_type-label,
+                                                      #xvar-label,
+                                                      #yvar-label {font-size: 75%;}"))),
+                            column(3,
+                                   varSelectInput("xvar_track", "Track variable", df_num, selected = "Duration (s)"),
+                                   varSelectInput("yvar_stream", "Streaming variable", df_streams_dropdown_y, selected = "Num. of streams"),
+                                   checkboxInput("exclude_instrumentals2", "Exclude instrumental tracks", FALSE),
+                                   checkboxInput("by_albums2", "Group by album", TRUE),
+                                   conditionalPanel(condition="input.by_albums==true",
+                                                    checkboxInput("album_images2", "Use album covers as points", FALSE),
+                                                    conditionalPanel(condition="input.album_images2==true",
+                                                                     sliderInput("slider2", "Point size",
+                                                                                 min = 0.001, max = 0.5, value = .03))),
+                                   checkboxInput("show_margins2", "Show distributions", FALSE),
+                                   conditionalPanel(condition="input.show_margins2==true",
+                                                    selectInput("margin_type2", "Type", list("Density", "Histogram"), "Density")),
+                                   checkboxInput("smooth2", "Add smoothing"),
+                                   conditionalPanel(condition="input.smooth2==true",
+                                                    selectInput("smooth_type2", "Smoothing function",
+                                                                list("Linear"="lm", "Loess"="loess"), selected = "Linear")),
+                                   hr(), 
+                                   checkboxGroupInput(
+                                     "Album2", "Filter by album",
+                                     choices = unique(df_trackviz$Album),
+                                     selected = unique(df_trackviz$Album)
+                                   )
+                            ),
+                            column(6,
+                                   plotOutput("scatter_streams"),
+                                   hr(),
+                                   DTOutput("regression_table")
+                            ),
+                            column(3,
+                                   h6("Summary Statistics", align="center"),
+                                   div(DT::DTOutput("table"), style="font-size:75%")
+                            )
+                          )),
                  tabPanel("About",
                           mainPanel(
                             includeMarkdown("Data/aboutpage.md")
@@ -261,6 +317,8 @@ server <- function(input, output, session) {
       df_trackviz %>% filter(Album %in% input$Album)
     }
   })
+  
+  
 
   subsetted_table <- reactive({
     if(input$exclude_instrumentals){
@@ -467,6 +525,47 @@ server <- function(input, output, session) {
                            `Duration (s)`=round(`Duration (s)`)) %>%
                     pivot_longer(everything(), names_to="Variable", values_to="Value") %>%
                     arrange(Variable),
+                  rownames=F,
+                  options = list(dom = 't'))
+  })
+  
+  subsetted_streams <- reactive({
+    req(input$Album2)
+    if(input$exclude_instrumentals2){
+      df_streams %>% filter(Album %in% input$Album2, text != "")
+    }
+    else{
+      df_streams %>% filter(Album %in% input$Album2)
+    }
+  })
+  
+  # streaming scatter
+  output$scatter_streams <- renderPlot({
+    p <- ggplot(subsetted_streams(), aes(!!input$xvar_track, !!input$yvar_stream)) +
+      theme_bw() +
+      list(
+        theme(legend.position = "bottom",
+              legend.text=element_text(size=8)),
+        if(input$by_albums2) aes(color = Album),
+        if(input$by_albums2) scale_color_manual(values=album_colors),
+        geom_point(),
+        if(input$album_images2) geom_image(aes(image=album_img_path, color=NULL), size=input$slider2),
+        if(input$album_images2 & !input$show_margins2 & !input$smooth2) theme(legend.position="none"),
+        if(input$smooth2) geom_smooth(method=input$smooth_type2, se=F),
+        labs(color=""),
+        if(input$xvar_track=="Track position in album (%)*") labs(caption="* Calculated as % of the way through the album's duration the track starts at.")
+      )
+    
+    if (input$show_margins2) {
+      p <- ggExtra::ggMarginal(p, type = tolower(input$margin_type2), margins = "both",
+                               size = 8, groupColour = input$by_albums2, groupFill = input$by_albums2)
+    }
+    
+    p
+  }, res = 100)
+  
+  output$table <- DT::renderDT({
+    DT::datatable(subsetted_table(),
                   rownames=F,
                   options = list(dom = 't'))
   })
