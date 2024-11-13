@@ -257,7 +257,7 @@ ui <- navbarPage("SufjanViz", fluid=T,
                             ),
                             column(3,
                                    h6("Summary Statistics", align="center"),
-                                   div(DT::DTOutput("table"), style="font-size:75%")
+                                   div(DT::DTOutput("table_streams"), style="font-size:75%")
                             )
                           )),
                  tabPanel("About",
@@ -331,6 +331,31 @@ server <- function(input, output, session) {
 
     if("Album release date" %in% names(df_sub)) df_sub <- df_sub %>% select(-"Album release date")
 
+    df_sub %>%
+      pivot_longer(everything(), names_to="variable", values_to="value") %>%
+      group_by(variable) %>%
+      summarize(Min=round(min(value, na.rm=T), 2),
+                Q1=round(quantile(value, probs=0.25, na.rm=T), 2),
+                Mean=round(mean(value, na.rm=T), 2),
+                Median=round(median(value, na.rm=T), 2),
+                Q3=round(quantile(value, probs=0.75, na.rm=T), 2),
+                Max=round(max(value, na.rm=T), 2),
+                `Std. dev.`=round(sd(value, na.rm=T))) %>%
+      pivot_longer(-variable, names_to="Statistic") %>%
+      pivot_wider(names_from=variable)
+  })
+  
+  subsetted_table_streams <- reactive({
+    if(input$exclude_instrumentals2){
+      df_sub <- df_streams %>% filter(Album %in% input$Album2, text != "") %>%
+        select(input$xvar_track, input$yvar_stream)
+    }
+    else{
+      df_sub <- df_streams %>% select(input$xvar_track, input$yvar_stream) 
+    }
+    
+    if("Album release date" %in% names(df_sub)) df_sub <- df_sub %>% select(-"Album release date")
+    
     df_sub %>%
       pivot_longer(everything(), names_to="variable", values_to="value") %>%
       group_by(variable) %>%
@@ -539,6 +564,12 @@ server <- function(input, output, session) {
     }
   })
   
+  output$table_streams <- DT::renderDT({
+    DT::datatable(subsetted_table_streams(),
+                  rownames=F,
+                  options = list(dom = 't'))
+  })
+  
   # streaming scatter
   output$scatter_streams <- renderPlot({
     p <- ggplot(subsetted_streams(), aes(!!input$xvar_track, !!input$yvar_stream)) +
@@ -563,12 +594,6 @@ server <- function(input, output, session) {
     
     p
   }, res = 100)
-  
-  output$table <- DT::renderDT({
-    DT::datatable(subsetted_table(),
-                  rownames=F,
-                  options = list(dom = 't'))
-  })
 
 }
 
