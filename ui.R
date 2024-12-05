@@ -74,18 +74,21 @@ ui <- navbarPage("SufjanViz", fluid=T,
                           fluidRow(
                             column(3,
                                    selectInput("wc_album", "Album", all_albums, selected="Illinois"),
-                                   selectInput("wc_song", "Song",
+                                   selectInput("wc_song", "Track",
                                                choices = c("Chicago"), selected="Chicago"),
-                                   hr(),
-                                   sliderInput("freq",
-                                               "Min Frequency:",
-                                               min = 1,  max = 30, value = 1)
-                            ),
-                            column(6,
-                                   wordcloud2Output("wordcloud"),
                                    hr(),
                                    h6("Track Statistics", align=""),
                                    div(DT::DTOutput("table_wc"), style="font-size:75%")
+                                   # hr(),
+                                   # sliderInput("freq",
+                                   #             "Min Frequency:",
+                                   #             min = 1,  max = 30, value = 1)
+                            ),
+                            column(6,
+                                   wordcloud2Output("wordcloud")
+                                   # hr(),
+                                   # h6("Track Statistics", align=""),
+                                   # div(DT::DTOutput("table_wc"), style="font-size:75%")
                             ),
                             column(
                               3, uiOutput("lyricColumn")
@@ -102,8 +105,8 @@ ui <- navbarPage("SufjanViz", fluid=T,
                                                       #xvar-label,
                                                       #yvar-label {font-size: 75%;}"))),
                             column(3,
-                                   varSelectInput("xvar_track", "Track variable", df_num, selected = "Duration (s)"),
-                                   varSelectInput("yvar_stream", "Streaming variable", df_streams_dropdown_y, selected = "Num. of streams"),
+                                   varSelectInput("xvar_track", "Track (X) variable", df_num, selected = "Duration (s)"),
+                                   varSelectInput("yvar_stream", "Streaming (Y) variable", df_streams_dropdown_y, selected = "Num. of streams"),
                                    checkboxInput("controls", "Add control variables", FALSE),
                                    conditionalPanel(condition="input.controls==true",
                                                     checkboxGroupInput("controls_select", "",

@@ -32,6 +32,7 @@ server <- function(input, output, session) {
                                      text != "")
   })
   
+  
   observe({
     req(input$wc_album)
     updateSelectInput(session, "wc_song",
@@ -143,13 +144,15 @@ server <- function(input, output, session) {
   # Generate the regression table output
   output$regression_table <- renderDT({
     req(fit())  # Ensure the model fit is valid
-    print(fit())
+    
     # If model is NULL (e.g., identical x and y), show message
     if (is.null(fit())) {
       return(datatable(data.frame(Message = "Regression model could not be fit. Check your variable selections.")))
     }
     
-    title <- paste("Effect of <strong>", input$xvar, "</strong> on <strong>", input$yvar, "</strong>")
+    title <- paste("Effect of <strong>", input$xvar, 
+                   "</strong> on <strong>", input$yvar, 
+                   "</strong>")
     
     # Tidy the model output and select only the necessary columns
     tidy_fit <- broom::tidy(fit(), conf.int = TRUE) %>%
@@ -242,22 +245,28 @@ server <- function(input, output, session) {
   
   # Define a reactive expression for the document term matrix
   terms <- reactive({
-    # Change when the "update" button is pressed...
-    input$wc_song
+    # Change when the song is changed...
+    req(input$wc_song)
     # ...but not for anything else
-    isolate({
+    #isolate({
       withProgress({
         setProgress(message = "Processing corpus...")
         getTermMatrix(input$wc_song)
       })
-    })
+    #})
   })
   
-  # Make the wordcloud drawing predictable during a session
+  # Only working for first song selected by default
+  # observeEvent(input$wc_song, {
+  #   print(max(terms()))
+  #   updateSliderInput(session=session, inputId="freq", 
+  #                     min=min(terms()), max=max(terms()), value=min(terms()))
+  # })
+  # 
   
   output$wordcloud <- renderWordcloud2({
-    v <- data.frame(words=names(terms()), freq=terms()) %>%
-      filter(ifelse(max(freq, na.rm=T) < input$freq, freq >= input$freq, freq>=0))
+    v <- data.frame(words=names(terms()), freq=terms()) #%>%
+      #filter(ifelse(max(freq, na.rm=T) < input$freq, freq >= input$freq, freq>=0))
     
     wordcloud2(v, color=unname(album_colors))
   })
@@ -356,6 +365,7 @@ server <- function(input, output, session) {
   
   # streaming scatter
   output$scatter_streams <- renderPlot({
+    
     p <- ggplot(subsetted_streams(), aes(!!input$xvar_track, !!input$yvar_stream)) +
       theme_bw() +
       list(
@@ -366,14 +376,62 @@ server <- function(input, output, session) {
         geom_point(),
         if(input$album_images2) geom_image(aes(image=album_img_path, color=NULL), size=input$slider2),
         if(input$album_images2 & !input$show_margins2 & !input$smooth2) theme(legend.position="none"),
-        if(input$smooth2) geom_smooth(method=input$smooth_type2, se=F),
+        #if(input$smooth2) geom_smooth(method=input$smooth_type2, se=F),
         labs(color=""),
         if(input$xvar_track=="Track position in album (%)*") labs(caption="* Calculated as % of the way through the album's duration the track starts at.")
       )
     
-    if (input$show_margins2) {
-      p <- ggExtra::ggMarginal(p, type = tolower(input$margin_type2), margins = "both",
-                               size = 8, groupColour = input$by_albums2, groupFill = input$by_albums2)
+    # Add line of best fit and confidence intervals accounting for control variables
+    model <- fit_streams()
+    if (!is.null(model)) {
+      # Generate a new dataset for predictions
+      x_range <- seq(min(subsetted_streams()[[input$xvar_track]], na.rm = TRUE),
+                     max(subsetted_streams()[[input$xvar_track]], na.rm = TRUE),
+                     length.out = 100)  # Generate 100 evenly spaced points for x
+      
+      y_range <- seq(min(subsetted_streams()[[input$yvar_stream]], na.rm = TRUE),
+                     max(subsetted_streams()[[input$yvar_stream]], na.rm = TRUE),
+                     length.out = 100)  # Generate 100 evenly spaced points for y
+      
+      control_means <- subsetted_streams() %>%
+        dplyr::summarize(across(all_of(input$controls_select), mean, na.rm = TRUE))  # Calculate means for control vars
+      
+      
+      # Create prediction data frame
+      prediction_data <- data.frame(xvar = x_range, yvar=y_range) %>% 
+        dplyr::bind_cols(control_means)
+      
+        
+      # Rename the xvar column to the name of the input variable
+      colnames(prediction_data)[1] <- as.character(input$xvar_track)
+      colnames(prediction_data)[2] <- as.character(input$yvar_stream)
+      
+      # Add predictions and confidence intervals
+      prediction <- predict(model, newdata = prediction_data, interval = "confidence", level = 0.95)
+      
+      prediction_data <- prediction_data %>%
+        mutate(fit = prediction[, "fit"],
+               lwr = prediction[, "lwr"],
+               upr = prediction[, "upr"])
+      
+      # Add the fitted line to the plot
+      p <- p +
+        geom_line(data = prediction_data, aes_string(x = input$xvar_track, y = "fit"),
+                  color = "red", size = 1)
+      
+      # Add confidence interval ribbon if stream_margins is TRUE
+      if (T) {
+        p <- p +
+          geom_ribbon(data = prediction_data,
+                      #aes(x = !!input$xvar_track, ymin = lwr, ymax = upr),
+                      aes(
+                        x = .data[[input$xvar_track]],  # Use tidy evaluation for dynamic x
+                        y = .data[[input$yvar_stream]],
+                        ymin = lwr,
+                        ymax = upr
+                      ),
+                      fill = "red", alpha = 0.2)
+      }
     }
     
     p
@@ -383,7 +441,6 @@ server <- function(input, output, session) {
   # Generate the regression table output
   output$regression_table_streams <- renderDT({
     req(fit_streams())  # Ensure the model fit is valid
-    print(fit_streams())
     # If model is NULL (e.g., identical x and y), show message
     if (is.null(fit())) {
       return(datatable(data.frame(Message = "Regression model could not be fit. Check your variable selections.")))
