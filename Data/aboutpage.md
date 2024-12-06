@@ -1,11 +1,13 @@
 ### What is this?
 
-SufjanViz is a Shiny for R dashboard for visualizing and analyzing the discography of Sufjan Stevens
+SufjanViz is a Shiny for R dashboard for visualizing and analyzing the discography of Sufjan Stevens and my own music listening tendencies.
 
 ***
 ### Where's the data from?
 
-Lyric data collected from [Genius](https://genius.com/artists/Sufjan-stevens)
+Lyric data and album art collected from [Genius](https://genius.com/artists/Sufjan-stevens)
+
+My music streaming data is collected from a data takeout request from [Spotify](https://support.spotify.com/us/article/data-rights-and-privacy-settings/) (I highly recommend doing this yourself if you aren't happy with the limited statistics of Spotify Wrapped!)
 
 Other track data scraped from [Spotify](https://www.spotify.com) using the [spotifyr](https://cran.r-project.org/web/packages/spotifyr/index.html) wrapper
 

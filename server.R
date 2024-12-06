@@ -448,6 +448,7 @@ server <- function(input, output, session) {
     
     title <- paste("Effect of <strong>", input$xvar_track, "</strong> on <strong>", input$yvar_stream, "</strong>")
     
+    
     # Tidy the model output and select only the necessary columns
     tidy_fit <- broom::tidy(fit_streams(), conf.int = TRUE) %>%
       select(term, estimate, std.error, conf.low, conf.high, p.value) %>%
@@ -456,11 +457,13 @@ server <- function(input, output, session) {
              conf.low=round(conf.low, 3),
              conf.high=round(conf.high, 3),
              p.value=round(p.value, 3))
-    
-    
-    tidy_fit$term <- c("Intercept", 
-                       as.character(input$xvar),
-                       input$controls_select)
+    # TODO: bug with backticks in term column
+    reactive({
+      req(input$yvar_stream, input$xvar_track)
+      tidy_fit$term <- c("Intercept", 
+                         get(input$xvar_track),
+                         input$controls_select)
+    })
     
     
     # Render the table with customized column names
