@@ -9,6 +9,8 @@ ui <- navbarPage("SufjanViz", fluid=T,
                                                       #xvar-label,
                                                       #yvar-label {font-size: 75%;}"))),
                             column(3,
+                                   "Plot and estimate the relationship between track-level variables",
+                                   hr(),
                                    varSelectInput("xvar", "X variable", df_num, selected = "Duration (s)"),
                                    varSelectInput("yvar", "Y variable", df_num, selected = "Tempo (bpm)"),
                                    checkboxInput("exclude_instrumentals", "Exclude instrumental tracks", FALSE),
@@ -43,28 +45,30 @@ ui <- navbarPage("SufjanViz", fluid=T,
                             )
                           )),
                  tabPanel("Albums",
-                          page_sidebar(
+                          fluidRow(
                             tags$head(tags$style(HTML(".selectize-input,
                                                       .selectize-dropdown,
                                                       .checkbox,
                                                       #barvar-label {font-size: 75%;}"))),
-                            mainPanel(
-                              plotOutput("bar"),
-                              hr(),
-                              h6("Summary Statistics", align="center"),
-                              div(DT::DTOutput("table_bar"), style="font-size:75%")
-                            ),
-                            sidebar=sidebar(
-                              varSelectInput("barvar", "Variable", df_bar, selected = "Duration (s)"),
-                              hr(),
-                              checkboxGroupInput(
-                                "Album_bar", "Filter by album",
-                                choices = unique(df_trackviz$Album),
-                                selected = unique(df_trackviz$Album)
-                              )
-                            )
-                          )
-                 ),
+                            column(3,
+                                   "Compare track-level variables across albums",
+                                   hr(),
+                                   varSelectInput("barvar", "Variable", df_bar, selected = "Duration (s)"),
+                                   hr(),
+                                   checkboxGroupInput(
+                                     "Album_bar", "Filter by album",
+                                     choices = unique(df_trackviz$Album),
+                                     selected = unique(df_trackviz$Album)
+                                    )
+                                   ),
+                                   column(6,
+                                          plotOutput("bar"),
+                                          hr(),
+                                          h6("Summary Statistics", align="center"),
+                                          div(DT::DTOutput("table_bar"), style="font-size:75%") 
+                                          )
+                                   )
+                          ),
                  tabPanel("Lyrics",
                           tags$head(tags$style(HTML(".selectize-input,
                                                       .selectize-dropdown,
@@ -73,22 +77,17 @@ ui <- navbarPage("SufjanViz", fluid=T,
                                                       #freq-label {font-size: 75%;}"))),
                           fluidRow(
                             column(3,
+                                   "View lyric frequencies by track",
+                                   hr(),
                                    selectInput("wc_album", "Album", all_albums, selected="Illinois"),
                                    selectInput("wc_song", "Track",
                                                choices = c("Chicago"), selected="Chicago"),
                                    hr(),
                                    h6("Track Statistics", align=""),
                                    div(DT::DTOutput("table_wc"), style="font-size:75%")
-                                   # hr(),
-                                   # sliderInput("freq",
-                                   #             "Min Frequency:",
-                                   #             min = 1,  max = 30, value = 1)
                             ),
                             column(6,
                                    wordcloud2Output("wordcloud")
-                                   # hr(),
-                                   # h6("Track Statistics", align=""),
-                                   # div(DT::DTOutput("table_wc"), style="font-size:75%")
                             ),
                             column(
                               3, uiOutput("lyricColumn")
@@ -105,6 +104,8 @@ ui <- navbarPage("SufjanViz", fluid=T,
                                                       #xvar-label,
                                                       #yvar-label {font-size: 75%;}"))),
                             column(3,
+                                   "Plot and estimate the relationship between track-level and streaming history variables",
+                                   hr(),
                                    varSelectInput("xvar_track", "Track (X) variable", df_num, selected = "Duration (s)"),
                                    varSelectInput("yvar_stream", "Streaming (Y) variable", df_streams_dropdown_y, selected = "Num. of streams"),
                                    checkboxInput("controls", "Add control variables", FALSE),
@@ -142,6 +143,10 @@ ui <- navbarPage("SufjanViz", fluid=T,
                                    h6("Summary Statistics", align="center"),
                                    div(DT::DTOutput("table_streams"), style="font-size:75%")
                             )
+                          )),
+                 tabPanel("Write-up",
+                          mainPanel(
+                            includeMarkdown("Data/writeup.md")
                           )),
                  tabPanel("About",
                           mainPanel(

@@ -7,7 +7,7 @@ Spotify Wrapped is fine and all but for those spending way too much time thinkin
 and provides little insight into the user's music listening habits, particularly what characteristics of music determine
 what streaming behavior.
 
-2. As a music lover, I'm interested in what patterns in an artist's discography can be gleaned quantitatively. 
+2. As a music lover, I'm also interested in what patterns in an artist's discography can be gleaned quantitatively. 
 Any dedicated fan observes patterns subjectively as they listen to their favorite artist but to what degree can these be verified?
 
 3. Much of my dissertation research focuses on merging variables constructed from natural language processing with other 
