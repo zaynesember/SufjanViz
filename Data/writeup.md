@@ -34,8 +34,6 @@ doing this project this was based mostly on vibes. What does the data say? The s
 Why do I prefer some songs over others? Is this a result of clear preferences for songs with certain traits over others?
 Or is it just a matter of subjective preference linked to when I first heard the song and what memories and emotions I associate it with?
 
-TODO: Spotify Wrapped screenshot
-
 # Sufjan's Musical Tendencies
 
 ## Priors
@@ -67,7 +65,18 @@ are rather bombastic, the album also features softer, sadder cuts like "John Way
 
 ### Tempo
 
+Like loudness, I expect the average tempo across albums to vary. While at first thought it seems intuitive that Sufjan's sadder 
+acoustic folk albums would be slower on average, I suspect the opposite may be the case. Albums like *Seven Swans* and *Carrie & Lowell*
+feature tracks that, though having softer instrumentation, tend to chug along at a quick pace carried by the acoustic guitar's complex fingerpicking patterns.
+"Carrie & Lowell" and "Death with Dignity" are both great examples of this. Meanwhile, the style employed on *Michigan* is much more meandering with
+tracks like "Flint (For the Unemployed and Underpaid)" and "Oh God Where Are You Now? (In Pickerel Lake? Pigeon? Marquette? Mackinaw?)" carried by
+a slow, gentle piano
+
 #### Findings
+
+mention I'm not accounting for reported uncertainty in tempo, also fact Sufjan uses odd time signatures like Concerning the UFO sighting
+
+Also point out a better measure would be a weighted average by the track duration
 
 ### Sentiment
 
@@ -95,3 +104,6 @@ TODO: intro paragraph
   listen to like Bon Iver, Angelo De Augustine
 - Streaming history is limited from September 2023 to September 2024 and is likely biased because Javelin was released in October 2023
   - Also biased by roadtrip playing a shared playlist
+- Analyzing chord sequences
+- sentiment is based on a small subset of lyrics, especially given Sufjan uses a lot of proper nouns
+that signal sentiment in a way not caught through sentiment analysis

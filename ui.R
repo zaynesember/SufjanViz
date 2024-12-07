@@ -77,7 +77,7 @@ ui <- navbarPage("SufjanViz", fluid=T,
                                                       #freq-label {font-size: 75%;}"))),
                           fluidRow(
                             column(3,
-                                   "View lyric frequencies by track",
+                                   "View lyric frequency and sentiment by track",
                                    hr(),
                                    selectInput("wc_album", "Album", all_albums, selected="Illinois"),
                                    selectInput("wc_song", "Track",
@@ -90,7 +90,13 @@ ui <- navbarPage("SufjanViz", fluid=T,
                                    wordcloud2Output("wordcloud")
                             ),
                             column(
-                              3, uiOutput("lyricColumn")
+                              3,
+                              HTML("<span style='color: rgba(200, 0, 0, 1); font-size: 10px;'>positive</span> 
+                                <span style='color: rgba(200, 0, 0, 1); font-size: 10px;'>sentiment</span>, 
+                                <span style='color: rgba(0, 0, 200, 1); font-size: 10px;'>negative</span> 
+                                <span style='color: rgba(0, 0, 200, 1); font-size: 10px;'>sentiment</span>"
+                                   ),
+                              uiOutput("lyricColumn")
                             )
                           )
                  ),
@@ -145,9 +151,17 @@ ui <- navbarPage("SufjanViz", fluid=T,
                             )
                           )),
                  tabPanel("Write-up",
-                          mainPanel(
-                            includeMarkdown("Data/writeup.md")
-                          )),
+                          "Under construction!"
+                          # fluidRow(
+                          #   column(7,
+                          #   includeMarkdown("Data/writeup.md")
+                          #   ),
+                          #   column(3,
+                          #          div(style = "height:500px"),
+                          #          img(src='wrapped.png', align = "right",
+                          #              height="90%", width="90%"))
+                          #   )),
+                 ),
                  tabPanel("About",
                           mainPanel(
                             includeMarkdown("Data/aboutpage.md")

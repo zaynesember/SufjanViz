@@ -2,46 +2,6 @@
 
 server <- function(input, output, session) {
   
-  # Dynamic updates to UI
-  
-  observe({
-    lyrics <- (df_trackviz %>% filter(name==input$wc_song) %>% pull(lyrics))[[1]]
-    
-    lyrics <- gsub("\r?\n", "<br/>", lyrics)  # Handle \r\n and \n
-    lyrics <- gsub("\r", "<br/>", lyrics)  # Handle any remaining \r
-    
-    output$lyricColumn <- renderUI({
-      tagList(
-        h4(input$wc_song),
-        p(HTML(lyrics), style = "font-size:75%;"),
-        hr()
-      )
-    })
-  })
-  
-  
-  observeEvent(input$by_albums, {
-    if(!input$by_albums){
-      updateCheckboxInput(session, "album_images", value=F)
-    }
-  })
-  
-  subsetted_wordcloud <- reactive({
-    req(input$wc_album)
-    df_trackviz_wordcloud %>% filter(Album==input$wc_album,
-                                     text != "")
-  })
-  
-  
-  observe({
-    req(input$wc_album)
-    updateSelectInput(session, "wc_song",
-                      label = "Song",
-                      choices = subsetted_wordcloud() %>% pull(name),
-                      selected="Chicago")
-    
-  })
-  
   subsetted_controls <- reactive({
     req(input$xvar_track)
     df_num %>% select(-!!input$xvar_track, -`Album release date`)
@@ -238,17 +198,68 @@ server <- function(input, output, session) {
                     rename_with(.fn=~paste(., input$barvar),
                                 .cols=c(Mean, Median, `Std Dev`, Min, Max)),
                   rownames=F,
-                  options = list(dom = 't'))
+                  options = list(dom = 't', pageLength=11))
   })
   
   # LYRICS
   
+  # Dynamic updates to UI
+  
+  # observe({
+  #   lyrics <- (df_trackviz %>% filter(name==input$wc_song) %>% pull(lyrics))[[1]]
+  #   
+  #   lyrics <- gsub("\r?\n", "<br/>", lyrics)  # Handle \r\n and \n
+  #   lyrics <- gsub("\r", "<br/>", lyrics)  # Handle any remaining \r
+  #   
+  #   output$lyricColumn <- renderUI({
+  #     tagList(
+  #       h4(input$wc_song),
+  #       p(HTML(lyrics), style = "font-size:75%;"),
+  #       hr()
+  #     )
+  #   })
+  # })
+  # 
+  observe({
+    output$lyricColumn <- renderUI({
+      song_id <- (df_trackviz %>% filter(name==input$wc_song) %>% pull(id))[[1]]  # Assuming there's a way to get the selected song ID
+      selected_lyrics <- df_lyric_sentiment %>%
+        filter(id==song_id) %>%
+        pull(lyrics)
+      tagList(
+        h4(input$wc_song),
+        p(HTML(selected_lyrics), style = "font-size:75%;"),
+        hr()
+      )
+    })
+  })
+  
+  observeEvent(input$by_albums, {
+    if(!input$by_albums){
+      updateCheckboxInput(session, "album_images", value=F)
+    }
+  })
+  
+  subsetted_wordcloud <- reactive({
+    req(input$wc_album)
+    df_trackviz_wordcloud %>% filter(Album==input$wc_album,
+                                     text != "")
+  })
+  
+  
+  observe({
+    req(input$wc_album)
+    updateSelectInput(session, "wc_song",
+                      label = "Song",
+                      choices = subsetted_wordcloud() %>% pull(name),
+                      selected="Chicago")
+    
+  })
+  
   # Define a reactive expression for the document term matrix
   terms <- reactive({
-    # Change when the song is changed...
+    # Change when the song is changed
     req(input$wc_song)
-    # ...but not for anything else
-    #isolate({
       withProgress({
         setProgress(message = "Processing corpus...")
         getTermMatrix(input$wc_song)
@@ -256,17 +267,8 @@ server <- function(input, output, session) {
     #})
   })
   
-  # Only working for first song selected by default
-  # observeEvent(input$wc_song, {
-  #   print(max(terms()))
-  #   updateSliderInput(session=session, inputId="freq", 
-  #                     min=min(terms()), max=max(terms()), value=min(terms()))
-  # })
-  # 
-  
   output$wordcloud <- renderWordcloud2({
-    v <- data.frame(words=names(terms()), freq=terms()) #%>%
-      #filter(ifelse(max(freq, na.rm=T) < input$freq, freq >= input$freq, freq>=0))
+    v <- data.frame(words=names(terms()), freq=terms())
     
     wordcloud2(v, color=unname(album_colors))
   })
