@@ -1,10 +1,12 @@
 name: sufjanviz
-title:
+title: SufjanViz
 username: zaynesember
 account: zaynesember
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 13176488
-bundleId: 9288414
+bundleId: 9480454
 url: https://zaynesember.shinyapps.io/sufjanviz/
 version: 1
+asMultiple: FALSE
+asStatic: FALSE

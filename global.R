@@ -159,7 +159,7 @@ df_trackviz_wordcloud <- df_trackviz %>% select(name, id, Album, text,
 #   select(id, lyrics)  # Retain only id and formatted lyrics
 
 #saveRDS(df_lyric_sentiment, "../GitRepos/SufjanViz/Data/df_lyric_sentiment.rds")
-df_lyric_sentiment <- readRDS("../GitRepos/SufjanViz/Data/df_lyric_sentiment.rds")
+df_lyric_sentiment <- readRDS("Data/df_lyric_sentiment.rds")
 
 # Helper to build term matrix
 getTermMatrix <- memoise(function(song) {
