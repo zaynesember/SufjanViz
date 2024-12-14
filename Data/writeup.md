@@ -80,11 +80,16 @@ Also point out a better measure would be a weighted average by the track duratio
 
 ### Sentiment
 
+I suspect that the sentiment of a song's lyrics will be correlated with other track statistics.
+My anecdotal perception is that Sufjan's longer tracks tend to be more upbeat,
+or at least contain upbeat parts, like "Impossible Soul" and "Come on Feel the Illinoise".
+
+TODO: put full track title above
+
 #### Findings
 
 # Prior 2: My listening behavior is correlated with measurable track qualities
 
-TODO: intro paragraph
 
 ## Priors
 
@@ -92,11 +97,21 @@ TODO: intro paragraph
 - I'm more likely to make it all the way through songs with more words per minute
 - I listen to the least Sufjan in the summer
 
+### Sentiment
+
+Given my perception is that I prefer the sadder parts of Sufjan's discography,
+I expect songs with more negative sentiment in their lyrics to have more total streams and
+to be more likely to be listened to all the way through.
+
+#### Findings
+
 ### Words per minute
 
-###
+Because I tend to prefer Sufjan's tracks with dense and loquacious (?) lyrics like those found
+on *Illinois* and *Michigan*, I expect that songs with more words per minute and with longer lyrics
+on average will have been streamed more often.
 
-## Findings
+#### Findings
 
 # Shortcomings and Next Steps
 
@@ -107,3 +122,5 @@ TODO: intro paragraph
 - Analyzing chord sequences
 - sentiment is based on a small subset of lyrics, especially given Sufjan uses a lot of proper nouns
 that signal sentiment in a way not caught through sentiment analysis
+
+TODO: other sentiment measure, add in seasonal data
