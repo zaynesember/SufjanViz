@@ -151,19 +151,33 @@ ui <- navbarPage("SufjanViz", fluid=T,
                             )
                           )),
                  tabPanel("Write-up",
-                          "Under construction!"
-                          # fluidRow(
-                          #   column(7,
-                          #   includeMarkdown("Data/writeup.md")
-                          #   ),
-                          #   column(3,
-                          #          div(style = "height:500px"),
-                          #          img(src='wrapped.png', align = "right",
-                          #              height="90%", width="90%"))
-                          #   )),
+                          #"Under construction!"
+                          fluidRow(
+                            column(7,
+                            includeMarkdown("Writeup/writeup.md")
+                            ),
+                            column(3,
+                                   div(style = "height:500px"),
+                                   img(src='fig0_wrapped.png', align = "right",
+                                       height="90%", width="90%"),
+                                   tags$figure(
+                                     img(src='fig1_loudness_by_album.png', align = "right",
+                                       height="100%", width="100%"),
+                                       tags$figcaption("Fig. 1: Track Loudness Across Albums"))
+                                   ),
+                            tags$figure(
+                              img(src='tab1_loudness_by_album.png', align = "right",
+                                  height="50%", width="50%"),
+                              tags$figcaption("Table 1: Album Loudness Summary")),
+                            tags$figure(
+                              img(src='fig3_loudness_sd.png', align = "right",
+                                  height="50%", width="50%"),
+                              tags$figcaption("Figure 3: Loudness Variation"))
+                          ),
+                          )
                  ),
                  tabPanel("About",
                           mainPanel(
-                            includeMarkdown("Data/aboutpage.md")
+                            includeMarkdown("Writeup/aboutpage.md")
                           ))
 )
