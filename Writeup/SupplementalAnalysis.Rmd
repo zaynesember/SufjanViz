@@ -24,3 +24,71 @@ df_trackviz %>% group_by(Album) %>%
   )
 ```
 
+# Tempo across albums
+
+```{r}
+df_trackviz %>% 
+  mutate(track_share_of_album_duration=`Duration (s)`/album_duration_s) %>% 
+  group_by(Album) %>% 
+  summarize(Weighted=sum(track_share_of_album_duration*`Tempo (bpm)`, na.rm=T),
+            Unweighted=mean(`Tempo (bpm)`, na.rm=T)) %>% 
+  pivot_longer(c(Weighted, Unweighted), names_to="name", values_to="value") %>% 
+  left_join(df_trackviz %>% 
+    mutate(track_share_of_album_duration=`Duration (s)`/album_duration_s) %>% 
+    group_by(Album) %>% 
+    summarize(Weighted=sqrt(sum((track_share_of_album_duration^2)*(tempo_confidence^2), na.rm=T)),
+              Unweighted=sqrt(sum(tempo_confidence^2, na.rm=T))) %>% 
+    pivot_longer(c(Weighted, Unweighted), names_to="name", values_to="error")
+    ) %>% 
+  ggplot(aes(y=value, x=Album, shape=name, color=Album)) +
+  geom_point(size=2, position=position_dodge(width=0.5)) +
+  geom_errorbar(aes(ymin=value-error, ymax=value+error),
+              width=0.25,
+              position=position_dodge(width=0.5)) +
+  labs(x="", y="Mean tempo (bpm)", shape="") +
+  scale_color_manual(values=album_colors, guide="none") +
+  #scale_y_continuous(breaks=NULL) +
+  theme_bw() +
+  theme(
+    #panel.grid = element_blank(),
+    panel.grid.major.x = element_line(linetype="dashed"),
+    legend.position="top",
+    axis.text.x=element_text(angle=45, vjust=0.62)
+  )
+  
+```
+
+```{r}
+bind_rows(df_trackviz %>% group_by(Album) %>% 
+            summarize(tempo_mean=mean(`Tempo (bpm)`, na.rm=T),
+                      tempo_error=sqrt(sum(tempo_confidence^2, na.rm=T)),
+                      type="All tracks"
+                      ) %>% 
+            unique(),
+          df_trackviz %>% group_by(Album) %>% 
+            filter(`Tempo (bpm)` != 0) %>% 
+            summarize(tempo_mean=mean(`Tempo (bpm)`, na.rm=T),
+                      tempo_error=sqrt(sum(tempo_confidence^2, na.rm=T)),
+                      type="0 tempo tracks excluded"
+                      ) %>% 
+            unique()
+          ) %>% 
+  ggplot(aes(x=Album, y=tempo_mean, color=Album, shape=type)) +
+  geom_point(size=2, position=position_dodge(width=0.5)) +
+  geom_errorbar(aes(ymin=tempo_mean-tempo_error, ymax=tempo_mean+tempo_error),
+              width=0.25,
+              position=position_dodge(width=0.5)) +
+  #geom_errorbar(aes(ymin=tempo_mean-tempo_error, ymax=tempo_mean+tempo_error)) +
+  #geom_segment(aes(x=Album, y=0, xend=Album, yend=mean_tempo)) +
+  labs(x="", y="Mean track tempo (bpm)", shape="") +
+  scale_color_manual(values=album_colors, guide="none") +
+  #scale_y_continuous(breaks=NULL) +
+  theme_bw() +
+  theme(
+    #panel.grid = element_blank(),
+    panel.grid.major.x = element_line(linetype="dashed"),
+    legend.position="top",
+    axis.text.x=element_text(angle=45, vjust=0.62)
+  )
+```
+

@@ -69,17 +69,6 @@ associate it with?
 
 # Sufjan's Musical Tendencies
 
-## Priors
-
--   Sufjan's style varies significantly album to album, i.e. tempo,
-    arrangement, but with common threads through them, i.e. bird
-    references and certain chord progressions
--   Certain albums are sonically and lyrically similar, most notably
-    Michigan and Illinois, but also ADP and Javelin
--   Certain albums are more depressing, namely Carrie & Lowell, and so
-    would expect them to differ systematically from others that feature
-    both sad and upbeat songs
-
 ## Prior 1: Sufjan's style varies significantly album to album in some ways but maintains certain musical themes
 
 Those who are only vaguely aware of Sufjan's music probably would
@@ -169,7 +158,7 @@ certainly seems intentional.
 
 ### Tempo
 
-Like loudness, I expect the average tempo across albums to vary. While
+Like loudness, I expect the tempo across albums to vary. While
 at first thought it seems intuitive that Sufjan's sadder acoustic folk
 albums would be slower on average, I suspect the opposite may be the
 case. Albums like *Seven Swans* and *Carrie & Lowell* feature tracks
@@ -183,11 +172,33 @@ Marquette? Mackinaw?)" carried by a slow, gentle piano
 
 #### Findings
 
-mention I'm not accounting for reported uncertainty in tempo, also fact
-Sufjan uses odd time signatures like Concerning the UFO sighting
+From Figure 4 alone it is difficult to determine whether average tempo differs
+significantly across albums, although it does appear my intuition that
+*Carrie & Lowell* is on the faster side. While we could just look at the mean
+track tempo for each album, this measure perhaps isn't the best
+operationalization of the concept we're actually interested in, i.e. how fast
+an album is overall. An album's longest tracks could be allegro but if a couple
+short tracks on the album are legato then the mean will give us the impression
+the album overall is moderato. The issue is that a simple mean does not account
+for track length--to do so we need a weighted mean which better captures how
+fast or slow an album is overall. 
 
-Also point out a better measure would be a weighted average by the track
-duration
+Figure 5 plots the weighted and unweighted mean for each album. Note that unlike
+for other measures, the Spotify API reports a measurement error for tempo since
+unlike more "objective" measures like loudness and track duration, tempo is
+estimated with some sort of algorithm. Immediately striking is the difference in
+error bar sizes between the unweighted and weighted means. The unweighted means
+have far larger uncertainties because the tracks with the largest reported error
+are interludes like "One Last “Whoo-Hoo!” for the Pullman" which have no
+discernible tempo.
+
+Looking at the weighted means in Figure 5, we see that *Seven Swans* and
+*Age of Adz* are the fastest albums as expected and not far behind are *Javelin*
+and *Carrie & Lowell*. *Michigan*, as predicted, is among the slowest albums. 
+Interestingly, the albums do not vary considerably in tempo when looking at the 
+weighted mean with most albums hovering around 125 bpm which in music lingo is 
+allegro or fast. It is suprising how little variation there is in mean tempo
+across albums considering how much they vary in musical style and theme.
 
 ## Prior 2: Track characteristics are correlated
 
@@ -230,11 +241,21 @@ positive the sentiment will be.
 
 #### Findings
 
-Mention that Sufjan uses a lot of weird words like "convocation", etc.
-that may not be handled well by sentiment analysis. This evident looking
-at the color-coded lyrics.
+From Figure 6 we see there is a weak correlation between sentiment and track 
+duration (*p*<.1)--longer tracks do tend to have more positive sentiment in
+their lyrics. Likewise, in Figure 7 there is a weak correlation between
+sentiment and words per minute (*p*<.11). There does appear to be something of a
+systematic difference between tracks with different emotional tones in their
+lyrics.
 
-remove instrumental tracks
+However, I am not extremely confident in these results--and not just because of
+their borderline statistical significance. Inspection of which sentiment lyrics
+are associated with in the AFINN dictionary through the color-coded lyrics in
+the Lyrics tab of the dashboard raises further questions. For one, few lyrics
+are coded as anything other than neutral. In addition, Sufjan employs a lot of,
+for lack of a better term, weird words and proper nouns to create imagery and
+reinforce themes in his music. Much of the sentiment conveyed by the lyrics may
+then be missed by the current sentiment analysis approach.
 
 ### Track Position
 
@@ -293,5 +314,10 @@ exclude instrumental tracks
 -   sentiment is based on a small subset of lyrics, especially given
     Sufjan uses a lot of proper nouns that signal sentiment in a way not
     caught through sentiment analysis
+    
+Lessons:
+- Qualitatively understanding the context in which your data exists informs
+insights from it
+- Your priors can be wrong
 
 TODO: other sentiment measure, add in seasonal data

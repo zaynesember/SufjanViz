@@ -172,8 +172,23 @@ ui <- navbarPage("SufjanViz", fluid=T,
                             tags$figure(
                               img(src='fig3_loudness_sd.png', align = "right",
                                   height="50%", width="50%"),
-                              tags$figcaption("Figure 3: Loudness Variation"))
-                          ),
+                              tags$figcaption("Fig. 3: Loudness Variation")),
+                            tags$figure(
+                              img(src='fig4_tempo_by_album.png', align = "right",
+                                  height="50%", width="50%"),
+                              tags$figcaption("Fig. 4: Track Tempo Across Albums")),
+                            tags$figure(
+                              img(src='fig5_tempo_weights.png', align = "right",
+                                  height="50%", width="50%"),
+                              tags$figcaption("Fig. 5: Mean Album Tempos")),
+                            tags$figure(
+                              img(src='fig6_sentiment_duration.png', align = "right",
+                                  height="50%", width="50%"),
+                              tags$figcaption("Fig. 6: Track Sentiment and Duration")),
+                            tags$figure(
+                              img(src='fig7_sentiment_duration.png', align = "right",
+                                  height="50%", width="50%"),
+                              tags$figcaption("Fig. 7: Track Sentiment and Words per Minute"))
                           )
                  ),
                  tabPanel("About",
