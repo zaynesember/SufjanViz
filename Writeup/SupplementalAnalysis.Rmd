@@ -92,3 +92,14 @@ bind_rows(df_trackviz %>% group_by(Album) %>%
   )
 ```
 
+# Track position
+
+```{r}
+lm("Tempo (bpm)" ~ "Track in First or Last Quarter of Album",
+   df_trackviz %>% 
+     mutate(`Track in First or Last Quarter of Album`=ifelse(`Track position in album (%)*`<=25 |
+                                                            `Track position in album (%)*`>=75,
+                                                          1, 0))) %>% 
+  summary()
+```
+

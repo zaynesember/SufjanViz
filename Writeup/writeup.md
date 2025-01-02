@@ -85,7 +85,7 @@ to be reflected in the data.
 One place I'd expect this to manifest is in the average loudness across
 tracks on each album. Albums relying on scarcer, acoustic arrangements
 like *Seven Swans* and *Carrie & Lowell* will be quieter than the rich,
-electronic arrangements found on *Age of Adz* or the orchestral
+electronic arrangements found on *The Age of Adz* or the orchestral
 arrangements full of horns and strings on many of the tracks from
 *Illinois*. I would, however, expect that *Illinois* would have the most
 variation in loudness across tracks because, while tracks like "Chicago"
@@ -104,7 +104,7 @@ to be his "softest" album. This finding is confirmed by Table 1, giving
 the mean loudness for *Carrie & Lowell* as -21.79 dB, over 7 dB louder
 than the next loudest album, *Michigan*. Further, the difference in
 means is statistically significant (*p*\<.001). Also contrary to
-expectations is the finding that *Age of Adz* is not one of the louder
+expectations is the finding that *The Age of Adz* is not one of the louder
 albums analyzed.
 
 What is fairly consistent with my priors is that *Illinois* boasts the
@@ -193,7 +193,7 @@ are interludes like "One Last “Whoo-Hoo!” for the Pullman" which have no
 discernible tempo.
 
 Looking at the weighted means in Figure 5, we see that *Seven Swans* and
-*Age of Adz* are the fastest albums as expected and not far behind are *Javelin*
+*The Age of Adz* are the fastest albums as expected and not far behind are *Javelin*
 and *Carrie & Lowell*. *Michigan*, as predicted, is among the slowest albums. 
 Interestingly, the albums do not vary considerably in tempo when looking at the 
 weighted mean with most albums hovering around 125 bpm which in music lingo is 
@@ -233,7 +233,6 @@ Sufjan's longer tracks tend to be more upbeat, or at least contain
 upbeat movements with corresponding upbeat lyrics, like "Impossible
 Soul" and "Come on! Feel the Illinoise!". For this reason I expect
 longer tracks will on average have more positive sentiment in their
-lyrics. Another common trait of these tracks is their verbosity, often
 featuring layered refrains in canon and dense verses. As such I also
 expect that the more words per minute in a track (which is effectively
 the total number of lyrics controlling for track duration), the more
@@ -260,12 +259,21 @@ then be missed by the current sentiment analysis approach.
 ### Track Position
 
 Because his albums tend to end on a more downbeat note, I expect that
-tracks toward the end of an album will tend to have a slower tempo and
+tracks toward the end of an album will have a slower tempo and
 fewer words per minute. This relationship may, however, be curvilinear
 since I also suspect his albums open with downbeat songs to create the
 aforementioned thematic arc.
 
 #### Findings
+
+From Figure 8 we see that, as expected, there is a slightly negative correlation
+(*p*<.1) between a track's position in the album and its tempo indicating that
+the albums tend to slow down as they progress. However, contrary to my prior,
+Figure 9 shows there is no statistically significant relationship between track 
+position and words per minute (when excluding instrumental tracks).
+
+However, this is only testing for a linear relationship between the variables.
+
 
 Also run regression with indicator for whether track is in last quarter
 of the album AND another for whether it's in first or last quarter

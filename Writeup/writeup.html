@@ -414,19 +414,6 @@ emotions I associate it with?</p>
 </div>
 <div id="sufjans-musical-tendencies" class="section level1">
 <h1>Sufjan’s Musical Tendencies</h1>
-<div id="priors" class="section level2">
-<h2>Priors</h2>
-<ul>
-<li>Sufjan’s style varies significantly album to album, i.e. tempo,
-arrangement, but with common threads through them, i.e. bird references
-and certain chord progressions</li>
-<li>Certain albums are sonically and lyrically similar, most notably
-Michigan and Illinois, but also ADP and Javelin</li>
-<li>Certain albums are more depressing, namely Carrie &amp; Lowell, and
-so would expect them to differ systematically from others that feature
-both sad and upbeat songs</li>
-</ul>
-</div>
 <div id="prior-1-sufjans-style-varies-significantly-album-to-album-in-some-ways-but-maintains-certain-musical-themes" class="section level2">
 <h2>Prior 1: Sufjan’s style varies significantly album to album in some
 ways but maintains certain musical themes</h2>
@@ -475,11 +462,11 @@ observe less variation is <em>The Avalanche</em>–a companion album to
 such a drastic change in variation for songs recorded in the same
 sessions for the same album?</p>
 <p>Some digging leads to a potential answer from a <a href="https://web.archive.org/web/20160303215709/http://pitchfork.com/features/interviews/6335-sufjan-stevens/">2006
-interview with <em>Pitchfork</em></a> where Sufjan says:</p>
+interview with <em>Pitchfork</em></a> where Sufjan says about <em>The
+Avalanche</em>:</p>
 <blockquote>
-<p>I was still overseeing everything, and I was still in charge. I did
-some things I didn’t do before: A lot of it was finished and I had
-recorded the drums myself, and I wasn’t really happy with my
+<p>I did some things I didn’t do before: A lot of it was finished and I
+had recorded the drums myself, and I wasn’t really happy with my
 performance, so I sent them to James McAllister in Seattle and had him
 perform drum tracks and have a different engineer record it. I hadn’t
 ever sent material to have someone else record it and be in charge of
@@ -487,29 +474,78 @@ how it would sound [. . .] About six of the songs were totally finished,
 and then more than half of it was modified. The editing, re-recording,
 and engineering I did afterward redeemed a lot of the material.</p>
 </blockquote>
+<p>This leads me to believe the change in variation is a result of
+Sufjan evolving his production practices while finishing the album and
+carrying those practices through subsequent albums.</p>
+<p>Yet this doesn’t explain why <em>Carrie &amp; Lowell</em> is so much
+louder than other albums. I have two theories:</p>
+<ol style="list-style-type: decimal">
+<li><p>The album was released in 2015, the same year Apple Music entered
+the music streaming market. Though music streaming services like Spotify
+had already been operating for a decade, most consumers used services
+that downloaded audio files locally like Napster and iTunes. The
+entrance of Apple Music could be considered a turning point in the music
+industry and may have influenced mixing decisions in some way. However,
+I’m skeptical of this given Sufjan was not sending his master recordings
+off to a major record label to distribute, rather he is signed to the
+independent label Asthmatic Kitty Records owned by himself and his
+stepfather (the Lowell of <em>Carrie &amp; Lowell</em>).</p></li>
+<li><p>The album is mixed to be louder intentionally because the
+instrumentation and vocals are so soft. I am by no means a sound
+engineer, though I have dabbled in recording and mixing, but the white
+noise that permeates several tracks (i.e. “The Only Thing”) from the
+album certainly sound like the ambient sound that results from cranking
+the loudness of a track up.</p></li>
+</ol>
+<p>Either way, the choice to mix the album to be so much louder than the
+others certainly seems intentional.</p>
 </div>
 </div>
 <div id="tempo" class="section level3">
 <h3>Tempo</h3>
-<p>Like loudness, I expect the average tempo across albums to vary.
-While at first thought it seems intuitive that Sufjan’s sadder acoustic
-folk albums would be slower on average, I suspect the opposite may be
-the case. Albums like <em>Seven Swans</em> and <em>Carrie &amp;
-Lowell</em> feature tracks that, though having softer instrumentation,
-tend to chug along at a quick pace carried by the acoustic guitar’s
-complex fingerpicking patterns. “Carrie &amp; Lowell” and “Death with
-Dignity” are both great examples of this. Meanwhile, the style employed
-on <em>Michigan</em> is much more meandering with tracks like “Flint
-(For the Unemployed and Underpaid)” and “Oh God Where Are You Now? (In
+<p>Like loudness, I expect the tempo across albums to vary. While at
+first thought it seems intuitive that Sufjan’s sadder acoustic folk
+albums would be slower on average, I suspect the opposite may be the
+case. Albums like <em>Seven Swans</em> and <em>Carrie &amp; Lowell</em>
+feature tracks that, though having softer instrumentation, tend to chug
+along at a quick pace carried by the acoustic guitar’s complex
+fingerpicking patterns. “Carrie &amp; Lowell” and “Death with Dignity”
+are both great examples of this. Meanwhile, the style employed on
+<em>Michigan</em> is much more meandering with tracks like “Flint (For
+the Unemployed and Underpaid)” and “Oh God Where Are You Now? (In
 Pickerel Lake? Pigeon? Marquette? Mackinaw?)” carried by a slow, gentle
 piano</p>
 <div id="findings-1" class="section level4">
 <h4>Findings</h4>
-<p>mention I’m not accounting for reported uncertainty in tempo, also
-fact Sufjan uses odd time signatures like Concerning the UFO
-sighting</p>
-<p>Also point out a better measure would be a weighted average by the
-track duration</p>
+<p>From Figure 4 alone it is difficult to determine whether average
+tempo differs significantly across albums, although it does appear my
+intuition that <em>Carrie &amp; Lowell</em> is on the faster side. While
+we could just look at the mean track tempo for each album, this measure
+perhaps isn’t the best operationalization of the concept we’re actually
+interested in, i.e. how fast an album is overall. An album’s longest
+tracks could be allegro but if a couple short tracks on the album are
+legato then the mean will give us the impression the album overall is
+moderato. The issue is that a simple mean does not account for track
+length–to do so we need a weighted mean which better captures how fast
+or slow an album is overall.</p>
+<p>Figure 5 plots the weighted and unweighted mean for each album. Note
+that unlike for other measures, the Spotify API reports a measurement
+error for tempo since unlike more “objective” measures like loudness and
+track duration, tempo is estimated with some sort of algorithm.
+Immediately striking is the difference in error bar sizes between the
+unweighted and weighted means. The unweighted means have far larger
+uncertainties because the tracks with the largest reported error are
+interludes like “One Last “Whoo-Hoo!” for the Pullman” which have no
+discernible tempo.</p>
+<p>Looking at the weighted means in Figure 5, we see that <em>Seven
+Swans</em> and <em>Age of Adz</em> are the fastest albums as expected
+and not far behind are <em>Javelin</em> and <em>Carrie &amp;
+Lowell</em>. <em>Michigan</em>, as predicted, is among the slowest
+albums. Interestingly, the albums do not vary considerably in tempo when
+looking at the weighted mean with most albums hovering around 125 bpm
+which in music lingo is allegro or fast. It is suprising how little
+variation there is in mean tempo across albums considering how much they
+vary in musical style and theme.</p>
 </div>
 </div>
 </div>
@@ -550,10 +586,22 @@ the total number of lyrics controlling for track duration), the more
 positive the sentiment will be.</p>
 <div id="findings-2" class="section level4">
 <h4>Findings</h4>
-<p>Mention that Sufjan uses a lot of weird words like “convocation”,
-etc. that may not be handled well by sentiment analysis. This evident
-looking at the color-coded lyrics.</p>
-<p>remove instrumental tracks</p>
+<p>From Figure 6 we see there is a weak correlation between sentiment
+and track duration (<em>p</em>&lt;.1)–longer tracks do tend to have more
+positive sentiment in their lyrics. Likewise, in Figure 7 there is a
+weak correlation between sentiment and words per minute
+(<em>p</em>&lt;.11). There does appear to be something of a systematic
+difference between tracks with different emotional tones in their
+lyrics.</p>
+<p>However, I am not extremely confident in these results–and not just
+because of their borderline statistical significance. Inspection of
+which sentiment lyrics are associated with in the AFINN dictionary
+through the color-coded lyrics in the Lyrics tab of the dashboard raises
+further questions. For one, few lyrics are coded as anything other than
+neutral. In addition, Sufjan employs a lot of, for lack of a better
+term, weird words and proper nouns to create imagery and reinforce
+themes in his music. Much of the sentiment conveyed by the lyrics may
+then be missed by the current sentiment analysis approach.</p>
 </div>
 </div>
 <div id="track-position" class="section level3">
@@ -576,7 +624,7 @@ quarter</p>
 <div id="prior-2-my-listening-behavior-is-correlated-with-measurable-track-qualities" class="section level1">
 <h1>Prior 2: My listening behavior is correlated with measurable track
 qualities</h1>
-<div id="priors-1" class="section level2">
+<div id="priors" class="section level2">
 <h2>Priors</h2>
 <ul>
 <li>I listen to sadder Sufjan songs later in the day and during the
@@ -624,6 +672,8 @@ and is likely biased because Javelin was released in October 2023
 Sufjan uses a lot of proper nouns that signal sentiment in a way not
 caught through sentiment analysis</li>
 </ul>
+<p>Lessons: - Qualitatively understanding the context in which your data
+exists informs insights from it - Your priors can be wrong</p>
 <p>TODO: other sentiment measure, add in seasonal data</p>
 </div>
 
