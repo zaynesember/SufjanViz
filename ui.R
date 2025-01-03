@@ -110,7 +110,7 @@ ui <- navbarPage("SufjanViz", fluid=T,
                                                       #xvar-label,
                                                       #yvar-label {font-size: 75%;}"))),
                             column(3,
-                                   "Plot and estimate the relationship between track-level and streaming history variables",
+                                   "Plot and estimate the relationship between track-level and (my) streaming history variables",
                                    hr(),
                                    varSelectInput("xvar_track", "Track (X) variable", df_num, selected = "Duration (s)"),
                                    varSelectInput("yvar_stream", "Streaming (Y) variable", df_streams_dropdown_y, selected = "Num. of streams"),
@@ -151,44 +151,82 @@ ui <- navbarPage("SufjanViz", fluid=T,
                             )
                           )),
                  tabPanel("Write-up",
-                          #"Under construction!"
                           fluidRow(
                             column(7,
                             includeMarkdown("Writeup/writeup.md")
                             ),
-                            column(3,
-                                   div(style = "height:500px"),
-                                   img(src='fig0_wrapped.png', align = "right",
-                                       height="90%", width="90%"),
+                            column(5,
+                                   div(style = "height:400px"),
                                    tags$figure(
-                                     img(src='fig1_loudness_by_album.png', align = "right",
-                                       height="100%", width="100%"),
-                                       tags$figcaption("Fig. 1: Track Loudness Across Albums"))
+                                     img(src='fig0_wrapped.png', align = "center",
+                                         height="50%", width="50%"),
+                                     tags$figcaption("Fig 0: My Spotify Wrapped")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='fig1_loudness_by_album.png', align = "center",
+                                       height="80%", width="80%"),
+                                       tags$figcaption("Fig. 1: Track Loudness Across Albums")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='tab1_loudness_by_album.png', align = "center",
+                                         height="80%", width="80%"),
+                                     tags$figcaption("Table 1: Album Loudness Summary")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='fig2_loudness_sd.png', align = "center",
+                                         height="80%", width="80%"),
+                                     tags$figcaption("Fig. 3: Loudness Variation")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='fig3_tempo_by_album.png', align = "center",
+                                         height="80%", width="80%"),
+                                     tags$figcaption("Fig. 3: Track Tempo Across Albums")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='fig4_tempo_weights.png', align = "center",
+                                         height="80%", width="80%"),
+                                     tags$figcaption("Fig. 4: Mean Album Tempos")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='fig5_sentiment_duration.png', align = "center",
+                                         height="80%", width="80%"),
+                                     tags$figcaption("Fig. 5: Track Sentiment and Duration")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='fig6_sentiment_duration.png', align = "center",
+                                         height="80%", width="80%"),
+                                     tags$figcaption("Fig. 6: Track Sentiment and Words per Minute")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='fig7_position_tempo.png', align = "center",
+                                         height="80%", width="80%"),
+                                     tags$figcaption("Fig. 7: Track Position and Tempo")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='fig8_position_wpm.png', align = "center",
+                                         height="80%", width="80%"),
+                                     tags$figcaption("Fig. 8: Track Position and Words per Minute")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='fig9_sentiment_streams.png', align = "center",
+                                         height="80%", width="80%"),
+                                     tags$figcaption("Fig. 9: Track Sentiment and Num. of Streams")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='fig10_sentiment_percplayed.png', align = "center",
+                                         height="80%", width="80%"),
+                                     tags$figcaption("Fig. 10: Track Sentiment and Mean % Played")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='fig11_wordlength_streams.png', align = "center",
+                                         height="80%", width="80%"),
+                                     tags$figcaption("Fig. 11: Num. of Streams and Mean Word Length")),
+                                   div(style = "height:25px"),
+                                   tags$figure(
+                                     img(src='tab2_mwl.png', align = "ccenter",
+                                         height="50%", width="50%"),
+                                     tags$figcaption("Table 2: Num. of Streams and Mean Word Length (No Javelin)")),
                                    ),
-                            tags$figure(
-                              img(src='tab1_loudness_by_album.png', align = "right",
-                                  height="50%", width="50%"),
-                              tags$figcaption("Table 1: Album Loudness Summary")),
-                            tags$figure(
-                              img(src='fig3_loudness_sd.png', align = "right",
-                                  height="50%", width="50%"),
-                              tags$figcaption("Fig. 3: Loudness Variation")),
-                            tags$figure(
-                              img(src='fig4_tempo_by_album.png', align = "right",
-                                  height="50%", width="50%"),
-                              tags$figcaption("Fig. 4: Track Tempo Across Albums")),
-                            tags$figure(
-                              img(src='fig5_tempo_weights.png', align = "right",
-                                  height="50%", width="50%"),
-                              tags$figcaption("Fig. 5: Mean Album Tempos")),
-                            tags$figure(
-                              img(src='fig6_sentiment_duration.png', align = "right",
-                                  height="50%", width="50%"),
-                              tags$figcaption("Fig. 6: Track Sentiment and Duration")),
-                            tags$figure(
-                              img(src='fig7_sentiment_duration.png', align = "right",
-                                  height="50%", width="50%"),
-                              tags$figcaption("Fig. 7: Track Sentiment and Words per Minute"))
                           )
                  ),
                  tabPanel("About",

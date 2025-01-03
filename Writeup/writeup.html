@@ -430,10 +430,10 @@ would expect to be reflected in the data.</p>
 <p>One place I’d expect this to manifest is in the average loudness
 across tracks on each album. Albums relying on scarcer, acoustic
 arrangements like <em>Seven Swans</em> and <em>Carrie &amp; Lowell</em>
-will be quieter than the rich, electronic arrangements found on <em>Age
-of Adz</em> or the orchestral arrangements full of horns and strings on
-many of the tracks from <em>Illinois</em>. I would, however, expect that
-<em>Illinois</em> would have the most variation in loudness across
+will be quieter than the rich, electronic arrangements found on <em>The
+Age of Adz</em> or the orchestral arrangements full of horns and strings
+on many of the tracks from <em>Illinois</em>. I would, however, expect
+that <em>Illinois</em> would have the most variation in loudness across
 tracks because, while tracks like “Chicago” and “Come On! Feel the
 Illinoise! Part I: The World’s Columbian Exposition, Part II: Carl
 Sandburg Visits Me in a Dream” (yes, that’s the actual title) are rather
@@ -449,7 +449,7 @@ confirmed by Table 1, giving the mean loudness for <em>Carrie &amp;
 Lowell</em> as -21.79 dB, over 7 dB louder than the next loudest album,
 <em>Michigan</em>. Further, the difference in means is statistically
 significant (<em>p</em>&lt;.001). Also contrary to expectations is the
-finding that <em>Age of Adz</em> is not one of the louder albums
+finding that <em>The Age of Adz</em> is not one of the louder albums
 analyzed.</p>
 <p>What is fairly consistent with my priors is that <em>Illinois</em>
 boasts the second largest amount of variation in loudness across tracks,
@@ -538,8 +538,8 @@ uncertainties because the tracks with the largest reported error are
 interludes like “One Last “Whoo-Hoo!” for the Pullman” which have no
 discernible tempo.</p>
 <p>Looking at the weighted means in Figure 5, we see that <em>Seven
-Swans</em> and <em>Age of Adz</em> are the fastest albums as expected
-and not far behind are <em>Javelin</em> and <em>Carrie &amp;
+Swans</em> and <em>The Age of Adz</em> are the fastest albums as
+expected and not far behind are <em>Javelin</em> and <em>Carrie &amp;
 Lowell</em>. <em>Michigan</em>, as predicted, is among the slowest
 albums. Interestingly, the albums do not vary considerably in tempo when
 looking at the weighted mean with most albums hovering around 125 bpm
@@ -579,7 +579,6 @@ Sufjan’s longer tracks tend to be more upbeat, or at least contain
 upbeat movements with corresponding upbeat lyrics, like “Impossible
 Soul” and “Come on! Feel the Illinoise!”. For this reason I expect
 longer tracks will on average have more positive sentiment in their
-lyrics. Another common trait of these tracks is their verbosity, often
 featuring layered refrains in canon and dense verses. As such I also
 expect that the more words per minute in a track (which is effectively
 the total number of lyrics controlling for track duration), the more
@@ -607,74 +606,137 @@ then be missed by the current sentiment analysis approach.</p>
 <div id="track-position" class="section level3">
 <h3>Track Position</h3>
 <p>Because his albums tend to end on a more downbeat note, I expect that
-tracks toward the end of an album will tend to have a slower tempo and
-fewer words per minute. This relationship may, however, be curvilinear
-since I also suspect his albums open with downbeat songs to create the
+tracks toward the end of an album will have a slower tempo and fewer
+words per minute. This relationship may, however, be curvilinear since I
+also suspect his albums open with downbeat songs to create the
 aforementioned thematic arc.</p>
 <div id="findings-3" class="section level4">
 <h4>Findings</h4>
-<p>Also run regression with indicator for whether track is in last
-quarter of the album AND another for whether it’s in first or last
-quarter</p>
-<p>remove instrumental tracks</p>
+<p>From Figure 8 we see that, as expected, there is a slightly negative
+correlation (<em>p</em>&lt;.1) between a track’s position in the album
+and its tempo indicating that the albums tend to slow down as they
+progress. However, contrary to my prior, Figure 9 shows there is no
+statistically significant relationship between track position and words
+per minute (when excluding instrumental tracks).</p>
+<p>However, this is only testing for a linear relationship between the
+variables. I would expect that songs at both the beginning and end of
+the album would have slower tempo than those in the middle. I try two
+approaches to test for this kind of relationship: First, I create an
+indicator variable for whether a track is in the first or last quarter
+of an album and regress that on tempo–this yields null results. I also
+try an indicator for the first and last third as well as the first and
+last tenth, both of which still yield null results.</p>
+<p>These cutoffs are, of course, arbitrary and don’t really enable us to
+model the underlying relationship we suspect might be there. To do this
+more properly I estimate a quadratic regression which is just fancy
+statistics speak for including the square of the independent variable in
+the model. This too gives a null result leaving me to conclude that
+there does not seem to be a systemic arc in tempo across albums.</p>
 </div>
 </div>
 </div>
 </div>
-<div id="prior-2-my-listening-behavior-is-correlated-with-measurable-track-qualities" class="section level1">
-<h1>Prior 2: My listening behavior is correlated with measurable track
+<div id="prior-3-my-listening-behavior-is-correlated-with-measurable-track-qualities" class="section level1">
+<h1>Prior 3: My listening behavior is correlated with measurable track
 qualities</h1>
-<div id="priors" class="section level2">
-<h2>Priors</h2>
-<ul>
-<li>I listen to sadder Sufjan songs later in the day and during the
-winter</li>
-<li>I’m more likely to make it all the way through songs with more words
-per minute</li>
-<li>I listen to the least Sufjan in the summer</li>
-</ul>
 <div id="sentiment-1" class="section level3">
 <h3>Sentiment</h3>
 <p>Given my perception that I prefer the sadder parts of Sufjan’s
 discography, I expect songs with more negative sentiment in their lyrics
-to have more total streams and to be more likely to be listened to all
-the way through.</p>
+to have more total streams. I also expect I will be more likely to
+listen to them all the way through.</p>
 <div id="findings-4" class="section level4">
 <h4>Findings</h4>
+<p>Figures 10 and 11 show the relationship between lyric sentiment and
+my streaming behavior, revealing no significant correlation. As
+discussed earlier, however, this may be more a reflection of the
+sentiment dictionary not accurately reflecting the actual emotional
+content of songs.</p>
 </div>
 </div>
 <div id="words-per-minute" class="section level3">
 <h3>Words per minute</h3>
 <p>Because I tend to prefer Sufjan’s tracks with dense and loquacious
 lyrics like those found on <em>Illinois</em> and <em>Michigan</em>, I
-expect that songs with more words per minute and with longer lyrics on
-average will have been streamed more often.</p>
+expect that songs with more words per minute and with longer words on
+average will have been streamed more frequently.</p>
 <div id="findings-5" class="section level4">
 <h4>Findings</h4>
-<p>exclude instrumental tracks</p>
+<p>While I find no relationship between words per minute and streaming
+frequency, from Figure 12 we see there is a positive correlation between
+mean word length and streaming frequency as expected. The data seems to
+back up my prior that I prefer Sufjan’s tracks featuring more lyrical
+intricacy. There is still a bit of a surprise, however–this relationship
+is not driven by tracks from <em>Illinois</em> and <em>Michigan</em>.
+Rather it seems my obsession with tracks like “Everything That Rises”
+and “Will Anybody Ever Love Me?” since the release of <em>Javelin</em>
+do. This is confirmed by Table 2 where I estimate the same regression
+with <em>Javelin</em> tracks removed–the coefficient is still positive
+however no longer significant (which, to be fair, in part just reflects
+less power from the restricted sample size).</p>
 </div>
 </div>
 </div>
-</div>
-<div id="limitations-and-next-steps" class="section level1">
-<h1>Limitations and Next Steps</h1>
+<div id="lessons-and-next-steps" class="section level1">
+<h1>Lessons and Next Steps</h1>
+<p>It was a lot of fun learning how to create a Shiny dashboard for this
+project and to finally make use of some data I have been sitting on for
+a good while. Some things I learned along the way:</p>
 <ul>
-<li>Clearest limitation is only doing 1 artist, would like to extend to
-artists adjacent to Sufjan that I also listen to like Bon Iver, Angelo
-De Augustine</li>
-<li>Streaming history is limited from September 2023 to September 2024
-and is likely biased because Javelin was released in October 2023
+<li><p><strong>Dynamic data visualization works a different muscle than
+putting together static plots for a paper.</strong> While I have always
+enjoyed endlessly tweaking plots to make them aesthetically pleasing and
+comprehensible, I never got much into dynamic or interactive plots
+beyond making a 3-D scatter plot. Deciding what customization options to
+include and how to implement them was an interesting challenge that
+required thinking through what a stakeholder using the dashboard would
+want rather than just what I wanted to see.</p></li>
+<li><p><strong>GenAI is a great tool but still has
+shortcomings.</strong> This project was the first time I used OpenAI’s
+GPT (namely o-1) in a significant way. This was not quite the same as
+learning a whole new language with it since I am very comfortable in
+<code>R</code>, but it was the first time since undergrad I worked on a
+web app and so there were new mechanics (namely reactive environments
+and observable events) I had to get used to. I was really impressed by
+how well the GPT could follow my instructions and spit out code giving
+UI elements I requested and even building working UI elements that
+dynamically changed plots. While I still had to rely on StackOverflow
+and documentation to fully grasp what was happening, with GPT alone I
+could get pretty far and learn a good amount. I still don’t think using
+a GPT exclusively would be sufficient for someone with no or little
+programming experience but I now feel that I could pick up another
+language fairly quickly with its help. This is not to say there aren’t
+problems– there were many times when I was given broken code that it
+could not seem to fix or it told me blatantly incorrect ways to fix
+bugs. At the end of the day you still have to understand absolutely
+everything happening in your code to ensure a stable and functional
+product . . . but some day soon this may not be the case.</p></li>
+<li><p><strong>Your priors even about data you’re intimately familiar
+with can be wrong.</strong> As evidenced from a number of my hypotheses
+finding no support, even when in a domain you’re an “expert” in you can
+absolutely be incorrect, or at least find no evidence you are correct.
+In hindsight this seems obvious since as a PhD candidate I have run my
+fair share of regressions with null results</p></li>
+<li><p>Clearest limitation is only doing 1 artist, would like to extend
+to artists adjacent to Sufjan that I also listen to like Bon Iver,
+Angelo De Augustine</p></li>
+<li><p>Streaming history is limited from September 2023 to September
+2024 and is likely biased because Javelin was released in October
+2023</p>
 <ul>
 <li>Also biased by roadtrip playing a shared playlist</li>
 </ul></li>
-<li>Analyzing chord sequences</li>
-<li>sentiment is based on a small subset of lyrics, especially given
+<li><p>Analyzing chord sequences</p></li>
+<li><p>sentiment is based on a small subset of lyrics, especially given
 Sufjan uses a lot of proper nouns that signal sentiment in a way not
-caught through sentiment analysis</li>
+caught through sentiment analysis</p></li>
+<li><p>seasonality of listening</p></li>
 </ul>
 <p>Lessons: - Qualitatively understanding the context in which your data
 exists informs insights from it - Your priors can be wrong</p>
 <p>TODO: other sentiment measure, add in seasonal data</p>
+<p>Note: Supplemental analyses conducted for this writeup can be found
+<a href="https://github.com/zaynesember/SufjanViz/blob/main/Writeup/SupplementalAnalysis.Rmd">here</a>.</p>
 </div>
 
 

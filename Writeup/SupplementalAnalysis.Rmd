@@ -95,11 +95,43 @@ bind_rows(df_trackviz %>% group_by(Album) %>%
 # Track position
 
 ```{r}
-lm("Tempo (bpm)" ~ "Track in First or Last Quarter of Album",
-   df_trackviz %>% 
-     mutate(`Track in First or Last Quarter of Album`=ifelse(`Track position in album (%)*`<=25 |
+temp <- df_trackviz %>% 
+     # mutate(`Track in First or Last Quarter of Album`=ifelse(`Track position in album (%)*`<=25 |
+     #                                                        `Track position in album (%)*`>=75,
+     #                                                      1, 0))
+       mutate(beg_or_end_10=ifelse(`Track position in album (%)*`<=10 |
+                                                            `Track position in album (%)*`>=90,
+                                                          1, 0),
+              beg_or_end_25=ifelse(`Track position in album (%)*`<=25 |
                                                             `Track position in album (%)*`>=75,
-                                                          1, 0))) %>% 
+                                                          1, 0),
+              beg_or_end_33=ifelse(`Track position in album (%)*`<=33 |
+                                                            `Track position in album (%)*`>=66,
+                                                          1, 0),
+              "Track position"=`Track position in album (%)*`
+              ) %>% 
+  rename(Tempo="Tempo (bpm)")
+
+lm(Tempo ~ beg_or_end_10, temp
+   ) %>% 
   summary()
+
+lm(Tempo ~ I(`Track position`^2) + `Track position`, temp
+   ) %>% 
+  summary()
+```
+
+# Streaming Frequency and Mean Word Length
+
+```{r}
+df_trackviz %>% left_join(df_streams) %>% 
+  select(name, `Mean word length in lyrics`, `Num. of streams`) %>% 
+  arrange(desc(`Mean word length in lyrics`))
+
+library(modelsummary)
+temp <- df_trackviz %>% left_join(df_streams) %>% 
+      filter(Album!="Javelin")
+
+modelsummary(list("Num. of streams"=lm(`Num. of streams` ~ `Mean word length in lyrics`, temp)), gof_omit="AIC|BIC|F|Log.Lik.|RMSE", stars=T, statistic="{std.error} ({p.value})")
 ```
 

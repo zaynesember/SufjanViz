@@ -57,8 +57,8 @@ consider 160 tracks from 11 albums and pair it with my own streaming
 history from September 2023 to September 2024.
 
 From here I present two sets of priors and findings: The first concerns
-the artistry of Sufjan Stevens--as a dedicated listener (evidenced by my
-2024 Spotify Wrapped) of Sufjan's music I feel I have a good sense of
+the artistry of Sufjan Stevens--as a dedicated listener (evidenced by Figure 0, 
+my 2024 Spotify Wrapped) of Sufjan's music I feel I have a good sense of
 the patterns present in his discography but before doing this project
 this was based mostly on vibes. What does the data say? The second
 concerns my own listening behavior. Why do I prefer some songs over
@@ -172,7 +172,7 @@ Marquette? Mackinaw?)" carried by a slow, gentle piano
 
 #### Findings
 
-From Figure 4 alone it is difficult to determine whether average tempo differs
+From Figure 3 alone it is difficult to determine whether average tempo differs
 significantly across albums, although it does appear my intuition that
 *Carrie & Lowell* is on the faster side. While we could just look at the mean
 track tempo for each album, this measure perhaps isn't the best
@@ -183,7 +183,7 @@ the album overall is moderato. The issue is that a simple mean does not account
 for track length--to do so we need a weighted mean which better captures how
 fast or slow an album is overall. 
 
-Figure 5 plots the weighted and unweighted mean for each album. Note that unlike
+Figure 4 plots the weighted and unweighted mean for each album. Note that unlike
 for other measures, the Spotify API reports a measurement error for tempo since
 unlike more "objective" measures like loudness and track duration, tempo is
 estimated with some sort of algorithm. Immediately striking is the difference in
@@ -192,7 +192,7 @@ have far larger uncertainties because the tracks with the largest reported error
 are interludes like "One Last “Whoo-Hoo!” for the Pullman" which have no
 discernible tempo.
 
-Looking at the weighted means in Figure 5, we see that *Seven Swans* and
+Looking at the weighted means in Figure 4, we see that *Seven Swans* and
 *The Age of Adz* are the fastest albums as expected and not far behind are *Javelin*
 and *Carrie & Lowell*. *Michigan*, as predicted, is among the slowest albums. 
 Interestingly, the albums do not vary considerably in tempo when looking at the 
@@ -240,9 +240,9 @@ positive the sentiment will be.
 
 #### Findings
 
-From Figure 6 we see there is a weak correlation between sentiment and track 
+From Figure 5 we see there is a weak correlation between sentiment and track 
 duration (*p*<.1)--longer tracks do tend to have more positive sentiment in
-their lyrics. Likewise, in Figure 7 there is a weak correlation between
+their lyrics. Likewise, in Figure 6 there is a weak correlation between
 sentiment and words per minute (*p*<.11). There does appear to be something of a
 systematic difference between tracks with different emotional tones in their
 lyrics.
@@ -266,66 +266,133 @@ aforementioned thematic arc.
 
 #### Findings
 
-From Figure 8 we see that, as expected, there is a slightly negative correlation
+From Figure 7 we see that, as expected, there is a slightly negative correlation
 (*p*<.1) between a track's position in the album and its tempo indicating that
 the albums tend to slow down as they progress. However, contrary to my prior,
-Figure 9 shows there is no statistically significant relationship between track 
+Figure 8 shows there is no statistically significant relationship between track 
 position and words per minute (when excluding instrumental tracks).
 
 However, this is only testing for a linear relationship between the variables.
+I would expect that songs at both the beginning and end of the album would have
+slower tempo than those in the middle. I try two approaches to test for this
+kind of relationship: First, I create an indicator variable for whether a track
+is in the first or last quarter of an album and regress that on tempo--this
+yields null results. I also try an indicator for the first and last third as
+well as the first and last tenth, both of which still yield null results. 
+
+These cutoffs are, of course, arbitrary and don't really enable us to model the
+underlying relationship we suspect might be there. To do this more properly I
+estimate a quadratic regression which is just fancy statistics speak for
+including the square of the independent variable in the model. This too gives a 
+null result leaving me to conclude that there does not seem to be a systemic
+arc in tempo across albums.
 
 
-Also run regression with indicator for whether track is in last quarter
-of the album AND another for whether it's in first or last quarter
-
-remove instrumental tracks
-
-# Prior 2: My listening behavior is correlated with measurable track qualities
-
-## Priors
-
--   I listen to sadder Sufjan songs later in the day and during the
-    winter
--   I'm more likely to make it all the way through songs with more words
-    per minute
--   I listen to the least Sufjan in the summer
+# Prior 3: My listening behavior is correlated with measurable track qualities
 
 ### Sentiment
 
-Given my perception that I prefer the sadder parts of Sufjan's
-discography, I expect songs with more negative sentiment in their lyrics
-to have more total streams and to be more likely to be listened to all
-the way through.
+Given my perception that I prefer the sadder parts of Sufjan's discography, I 
+expect songs with more negative sentiment in their lyrics to have more total 
+streams. I also expect I will be more likely to listen to them all the way 
+through. 
 
 #### Findings
+
+Figures 9 and 10 show the relationship between lyric sentiment and my
+streaming behavior, revealing no significant correlation. As discussed
+earlier, however, this may be more a reflection of the sentiment dictionary not
+accurately reflecting the actual emotional content of songs.
 
 ### Words per minute
 
 Because I tend to prefer Sufjan's tracks with dense and loquacious
 lyrics like those found on *Illinois* and *Michigan*, I expect that
-songs with more words per minute and with longer lyrics on average will
-have been streamed more often.
+songs with more words per minute and with longer words on average will
+have been streamed more frequently.
 
 #### Findings
 
-exclude instrumental tracks
+While I find no relationship between words per minute and streaming frequency,
+from Figure 11 we see there is a positive correlation between mean word length
+and streaming frequency as expected. The data seems to back up my prior that I
+prefer Sufjan's tracks featuring more lyrical intricacy. There is still a bit of
+a surprise, however--this relationship is not driven by tracks from *Illinois*
+and *Michigan*. Rather it seems my obsession with tracks like "Everything That 
+Rises" and "Will Anybody Ever Love Me?" since the release of *Javelin* do. This
+is confirmed by Table 2 where I estimate the same regression with *Javelin* 
+tracks removed--the coefficient is still positive however no longer significant
+(which, to be fair, in part just reflects less power from the restricted sample
+size).
 
-# Limitations and Next Steps
+# Lessons and Next Steps
 
--   Clearest limitation is only doing 1 artist, would like to extend to
-    artists adjacent to Sufjan that I also listen to like Bon Iver,
-    Angelo De Augustine
--   Streaming history is limited from September 2023 to September 2024
-    and is likely biased because Javelin was released in October 2023
-    -   Also biased by roadtrip playing a shared playlist
--   Analyzing chord sequences
--   sentiment is based on a small subset of lyrics, especially given
-    Sufjan uses a lot of proper nouns that signal sentiment in a way not
-    caught through sentiment analysis
-    
-Lessons:
-- Qualitatively understanding the context in which your data exists informs
-insights from it
-- Your priors can be wrong
+It was a lot of fun learning how to create a Shiny dashboard for this project
+and to finally make use of some data I have been sitting on for a good while. 
+Some things I learned along the way:
 
-TODO: other sentiment measure, add in seasonal data
+- **Dynamic data visualization works a different muscle than putting together
+static plots for a paper.** While I have always enjoyed endlessly tweaking plots
+to make them aesthetically pleasing and comprehensible, I never got much into
+dynamic or interactive plots beyond making a 3-D scatter plot. Deciding what
+customization options to include and how to implement them was an interesting
+challenge that required thinking through what a stakeholder using the dashboard
+would want rather than just what I wanted to see.
+- **GenAI is a great tool but still has shortcomings.** This project was the
+first time I used OpenAI's GPT (namely o-1) in a significant way. This was not
+quite the same as learning a whole new language with it since I am very
+comfortable in `R`, but it was the first time since undergrad I worked on a web 
+app and so there were new mechanics (namely reactive environments and observable 
+events) I had to get used to. I was really impressed by how well the GPT could
+follow my instructions and spit out code giving UI elements I requested and
+even building working UI elements that dynamically changed plots. While I still
+had to rely on StackOverflow and documentation to fully grasp what was
+happening, with GPT alone I could get pretty far and learn a good amount. I
+still don't think using a GPT exclusively would be sufficient for someone with
+no or little programming experience but I now feel that I could pick up another
+language fairly quickly with its help. This is not to say there aren't problems--
+there were many times when I was given broken code that it could not seem to fix
+or it told me blatantly incorrect ways to fix bugs. At the end of the day you
+still have to understand absolutely everything happening in your code to ensure
+a stable and functional product . . . but some day soon this may not be the
+case.
+- **Your priors even about data you're intimately familiar with can be wrong.**
+As evidenced from a number of my hypotheses finding no support, even when in a
+domain you're an "expert" in you can absolutely be incorrect, or at least find
+no evidence you are correct. In hindsight this seems obvious since as a PhD
+candidate I have run my fair share of regressions with null results but it was a
+reminder to not my assumptions about the world and even my own behavior as
+ground truth.
+
+There are a number of limitations to this project that, if time allows, I would
+like to address to make for a more thorough analysis and just to think more
+about how I can use and present this data:
+
+- **Sample size of one artist:** The clearest limitation here is only looking at
+one artist's discography. I would love to extend the analysis to artists in the
+same sphere as Sufjan like Bon Iver, or in different genres entirely.
+- **Extended streaming history:** The streaming data from my Spotify data
+takeout is limited to September 2023 to September 2024. One year of data is
+pretty decent but more is usually better and a particular issue with this date
+range is that Sufjan released *Javelin* in October 2023, heavily skewing the
+results given I have been listening to the album consistently since. Revisiting
+this project down the line with one or two more years of data would be neat.
+- **Improving sentiment measurement:** A glaring improvement needed for this
+project is a better method for estimating the emotional sentiment of song
+lyrics. I need to do more research on the accepted dictionaries/methods for 
+getting the sentiment of shorter, literary texts like the song lyrics I use
+here.
+- **Making use of additional data:** I did not use all the data I initially
+collected for this project. Notably I have a community-sourced dataset of the
+time signatures of the discography. As someone with limited music theory
+knowledge it felt a bit daunting to tackle that data or collecting further
+musical data (namely keys, instruments used, and chord sequences) that could
+make for a really cool analysis that dives more into the actual music. I also
+constructed a number of variables intending to analyze the seasonality of my
+listening habits as I have some priors about them but did not get a chance
+to conduct the analyses.
+
+With all that said, thank you for checking out this project and please get in
+touch if you have any questions or spot any bugs!
+
+Note: Supplemental analyses conducted for this writeup can be found [here](https://github.com/zaynesember/SufjanViz/blob/main/Writeup/SupplementalAnalysis.Rmd).
